@@ -24,6 +24,6 @@ void VBO::unbind(){
   glBindBuffer(GL_ARRAY_BUFFER,0);
 }
 
-unsigned int VBO::getID(){
+unsigned int VBO::getID() const{
   return ID;
 }

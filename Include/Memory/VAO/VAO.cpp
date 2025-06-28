@@ -7,7 +7,7 @@ VAO::VAO(VBO &vbo){
 
 VAO::~VAO(){
   unbind();
-  glDeleteVertexArrays(1,ID);
+  glDeleteVertexArrays(1,&ID);
 }
 
 void VAO::bind(){
@@ -26,6 +26,6 @@ void VAO::setAttribPointer(int loc,int nrVal,int stride,int start){
   unbind();
 }
 
-unsigned int VAO::getID(){
+unsigned int VAO::getID() const{
   return ID;
 }

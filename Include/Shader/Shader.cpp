@@ -18,7 +18,7 @@ void Shader::use(){
   glUseProgram(ID);
 }
 
-unsigned int Shader::getID(){
+unsigned int Shader::getID() const{
   return ID;
 }
 
@@ -30,12 +30,12 @@ std::string Shader::loadFile(const std::string &path){
   try{
     file.open(path.c_str());
 
-    std::stringStream stream;
-    stream << file.rdbuf();
+    std::stringstream ss;
+    ss << file.rdbuf();
 
     file.close();
 
-    code = stream.str();
+    code = ss.str();
   }
   catch(const std::ifstream::failure &e){
     std::cerr<<"ERROR: Reading Shader File (PATH: "<<path<<"). REASON: "<<e.what()<<std::endl;

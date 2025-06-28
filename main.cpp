@@ -20,7 +20,7 @@ void processInput(GLFWwindow *window){
   if(glfwGetKey(window,GLFW_KEY_ESCAPE)==GLFW_PRESS)
     glfwSetWindowShouldClose(window,true);
   
-  bool Theld = false
+  bool Theld = false;
   if(glfwGetKey(window,GLFW_KEY_T)==GLFW_PRESS){
     glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
     Theld = true;

@@ -19,7 +19,7 @@ class VAO{
     void bind();
     void unbind();
 
-    unsigned int getID();
+    unsigned int getID() const;
     
     void setAttribPointer(int loc,int nrVal,int stride,int start);
 

@@ -27,29 +27,11 @@ class Shader{
   
     void use(); // method to use the shader program
     
-    unsigned int getID(); 
+    unsigned int getID() const; 
     
     // method to set uniform value by reference
     template <typename T>
     void setValue(const std::string &name,T &value){
-      unsigned int loc = glGetUniformLocation(ID,name.c_str());
-
-      if constexpr(std::is_same<T,int>::value)
-        glUniform1i(loc,value);
-      else if constexpr(std::is_same<T,bool>::value)
-        glUniform1i(loc,(int)value);
-      else if constexpr(std::is_same<T,float>::value)
-        glUniform1f(loc,value);
-      else if constexpr(std::is_same<T,glm::vec2>::value)
-        glUniform2fv(loc,1,glm::value_ptr(value));
-      else if constexpr(std::is_same<T,glm::vec3>::value)
-        glUniform3fv(loc,1,glm::value_ptr(value));
-      else if constexpr(std::is_same<T,glm::mat4>::value)
-        glUniformMatrix4fv(loc,1,GL_FALSE,glm::value_ptr(value));
-    }
-    // method to set uniform value by value
-    template <typename T>
-    void setValue(const std::string &name,T value){
       unsigned int loc = glGetUniformLocation(ID,name.c_str());
 
       if constexpr(std::is_same<T,int>::value)

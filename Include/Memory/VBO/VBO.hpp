@@ -23,8 +23,8 @@ class VBO{
     void bind();
     void unbind();
     
-    unsigned int getID();
+    unsigned int getID() const;
 
   private:
     unsigned int ID;
-}
+};

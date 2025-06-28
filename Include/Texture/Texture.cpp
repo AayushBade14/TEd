@@ -31,7 +31,7 @@ void Texture::loadTexture(const std::string &path,GLenum wrapS,GLenum wrapT,GLen
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,minF);
   glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,magF);
 
-  stbi_flip_vertically_on_load(true);
+  stbi_set_flip_vertically_on_load(true);
   
   int width,height,nrChannels;
   unsigned char *data = stbi_load(path.c_str(),&width,&height,&nrChannels,0);
@@ -62,6 +62,6 @@ void Texture::assignTextureUnit(int value){
   bind();
 }
 
-unsigned int Texture::getID(){
+unsigned int Texture::getID() const{
   return ID;
 }
