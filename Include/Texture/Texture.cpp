@@ -8,6 +8,11 @@ Texture::Texture(const std::string &path,GLenum wrapS,GLenum wrapT,GLenum minF,G
   loadTexture(path,wrapS,wrapT,minF,magF);
 }
 
+Texture::~Texture(){
+  unbind();
+  glDeleteTextures(1,&ID);
+}
+
 void Texture::bind(){
   glBindTexture(GL_TEXTURE_2D,ID);
 }
@@ -55,4 +60,8 @@ void Texture::setSamplerValue(Shader &shader,const std::string &name,int value){
 void Texture::assignTextureUnit(int value){
   glActiveTexture(GL_TEXTURE0 + value);
   bind();
+}
+
+unsigned int Texture::getID(){
+  return ID;
 }
