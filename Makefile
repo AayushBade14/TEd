@@ -18,6 +18,9 @@ OBJS = ./main.o \
 			 ./Include/Memory/VBO/VBO.o \
 			 ./Include/Memory/VAO/VAO.o \
 			 ./Include/ThirdParty/StbImage/stb_image.o \
+			 ./Include/Data/Data.o \
+			 ./Include/Collision/Collision.o \
+			 ./Include/UI/Button/Button.o \
 			 ./Include/ThirdParty/glad/glad.o
 
 #target

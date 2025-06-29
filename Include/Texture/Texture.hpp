@@ -9,15 +9,6 @@ class Texture{
     Texture(const std::string &path,GLenum wrapS,GLenum wrapT,GLenum minF,GLenum magF);
     ~Texture();
     
-    Texture& operator=(const Texture &other){
-      if(this == &other)
-        return *this;
-
-      ID = other.getID();
-
-      return *this;
-    }
-
     void bind();
     void unbind();
     

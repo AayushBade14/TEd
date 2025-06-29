@@ -16,15 +16,6 @@ class Shader{
     Shader(const std::string &vertexPath,const std::string &fragmentPath);
     ~Shader();
     
-    Shader& operator=(const Shader &other){
-      if(this == &other)
-        return *this;
-
-      ID = other.getID();
-
-      return *this;
-    }
-  
     void use(); // method to use the shader program
     
     unsigned int getID() const; 

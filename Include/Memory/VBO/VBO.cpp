@@ -7,10 +7,6 @@ VBO::VBO(std::vector<float> &vertices,GLenum method){
   unbind();
 }
 
-VBO::VBO(){
-  // empty constructor
-}
-
 VBO::~VBO(){
   unbind();
   glDeleteBuffers(1,&ID);

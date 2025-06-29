@@ -2,17 +2,6 @@
 
 /*
  ================================================================
- SHAPE-DEFINATION
- ================================================================
- */
-
-typedef struct{
-  glm::vec3 origin;
-  glm::vec3 size;
-}Rectangle;
-
-/*
- ================================================================
  AXIS ALIGNED RECT-RECT COLLISION
  ================================================================
  */
@@ -42,7 +31,7 @@ bool rect_rect_collide(Rectangle a,Rectangle b){
  */
 
 bool point_rect_collide(glm::vec3 &p,Rectangle r){
-  float left = r.origin;
+  float left = r.origin.x;
   float right = left + r.size.x;
   float bottom = r.origin.y;
   float top = bottom + r.size.y;
