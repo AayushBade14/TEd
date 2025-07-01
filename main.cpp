@@ -148,7 +148,7 @@ int main(void){
     
     glfwGetCursorPos(window,&xpos,&ypos);
     glm::vec3 cPos = {(float)xpos,(float)HEIGHT-(float)ypos,0.0f};
-    
+    std::cout<<"X: "<<xpos<<"Y: "<<ypos<<std::endl; 
     tex.assignTextureUnit(0);
     
     glm::mat4 model = glm::mat4(1.0f);
