@@ -10,6 +10,7 @@
 #include "./Include/UI/Button/Button.hpp"
 
 #include "./Include/Camera/Camera2D.hpp"
+#include "./Include/TextureAtlas/TextureAtlas.hpp"
 
 #include <iostream>
 
@@ -160,78 +161,23 @@ int main(void){
   Camera2D cam(window,100.0f);
   float dt = 0.0f;
   float lf = 0.0f;
+  
+  TextureAtlas atlas(window,1920.0f,1080.0f,13,25);
+
   while(!glfwWindowShouldClose(window)){
     float cf = (float)glfwGetTime();
     dt = cf - lf;
     lf = cf;
-
-    cam.update(dt);
-
+    
     processInput(window);
     glClearColor(0.0f,0.0f,0.0f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
     glfwGetCursorPos(window,&xpos,&ypos);
-    //glm::vec3 cPos = {(float)xpos,(float)HEIGHT-(float)ypos,0.0f};
-    //std::cout<<"X: "<<xpos<<"Y: "<<ypos<<std::endl; 
-    tex.assignTextureUnit(0);
+    glm::vec3 cPos = screenToWorld(xpos,ypos,atlas.getViewMatrix(),atlas.getProjectionMatrix());
     
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::scale(model,glm::vec3(500.0f,500.0f,0.0f));
-    //glm::mat4 view = glm::mat4(1.0f);
-    //glm::mat4 projection = glm::ortho(0.0f,1920.0f,0.0f,1080.0f);
-    glm::mat4 view = cam.getViewMatrix();
-    glm::mat4 projection = cam.getProjectionMatrix();
-    
-    glm::vec3 cPos = screenToWorld(xpos,ypos,view,projection);
-    shader.use();
-    shader.setValue("model",model);
-    shader.setValue("view",view);
-    shader.setValue("projection",projection);
-  
-    vao.bind();
-    glDrawArrays(GL_TRIANGLES,0,6);
-    vao.unbind();
-    tex.unbind();
+    atlas.renderTextureAtlas(dt,cPos);
 
-    model = glm::mat4(1.0f);
-    model = glm::translate(model,glm::vec3(550.0f,0.0f,0.0f));
-    model = glm::scale(model,glm::vec3(100.0f,100.0f,0.0f));
-    tex.assignTextureUnit(0);
-    selShader.use();
-    selShader.setValue("model",model);
-   // selShader.setValue("model",model);
-    selShader.setValue("view",view);
-    selShader.setValue("projection",projection);
-    sel(window,selShader,cPos); 
-
-    vao.bind();
-    glDrawArrays(GL_TRIANGLES,0,6);
-    vao.unbind();
-    
-    for(int y = 0;y<5;y++){
-      for(int x = 0;x<5;x++){
-        Rectangle r;
-        r.origin = tmap[y][x].position;
-        r.size = glm::vec3(100.0f,100.0f,0.0f);
-        if(point_rect_collide(cPos,r) && glfwGetMouseButton(window,GLFW_MOUSE_BUTTON_LEFT)==GLFW_PRESS){
-          tmap[y][x].start = start;
-          tmap[y][x].end = end;
-        }
-
-        model = glm::mat4(1.0f);
-        model = glm::translate(model,tmap[y][x].position);
-        model = glm::scale(model,glm::vec3(100.0f,100.0f,0.0f));
-        selShader.setValue("model",model);
-        selShader.setValue("p1",tmap[y][x].start);
-        selShader.setValue("p2",tmap[y][x].end);
-        vao.bind();
-        glDrawArrays(GL_TRIANGLES,0,6);
-        vao.unbind();
-      }
-    }
-
-    tex.unbind();
     glfwPollEvents();
     glfwSwapBuffers(window);
   }
