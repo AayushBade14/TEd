@@ -9,6 +9,8 @@
 #include "./Include/Collision/Collision.hpp"
 #include "./Include/UI/Button/Button.hpp"
 
+#include "./Include/Camera/Camera2D.hpp"
+
 #include <iostream>
 
 #define WIDTH 1920
@@ -140,8 +142,17 @@ int main(void){
       tmap[y][x] = tmp;
     }
   }
-
+  
+  Camera2D cam(window,100.0f);
+  float dt = 0.0f;
+  float lf = 0.0f;
   while(!glfwWindowShouldClose(window)){
+    float cf = (float)glfwGetTime();
+    dt = cf - lf;
+    lf = cf;
+
+    cam.update(dt);
+
     processInput(window);
     glClearColor(0.0f,0.0f,0.0f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -153,8 +164,10 @@ int main(void){
     
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model,glm::vec3(500.0f,500.0f,0.0f));
-    glm::mat4 view = glm::mat4(1.0f);
-    glm::mat4 projection = glm::ortho(0.0f,1920.0f,0.0f,1080.0f);
+    //glm::mat4 view = glm::mat4(1.0f);
+    //glm::mat4 projection = glm::ortho(0.0f,1920.0f,0.0f,1080.0f);
+    glm::mat4 view = cam.getViewMatrix();
+    glm::mat4 projection = cam.getProjectionMatrix();
     shader.use();
     shader.setValue("model",model);
     shader.setValue("view",view);

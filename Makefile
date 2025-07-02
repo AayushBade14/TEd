@@ -21,6 +21,7 @@ OBJS = ./main.o \
 			 ./Include/Data/Data.o \
 			 ./Include/Collision/Collision.o \
 			 ./Include/UI/Button/Button.o \
+			 ./Include/Camera/Camera2D.o \
 			 ./Include/ThirdParty/glad/glad.o
 
 #target
