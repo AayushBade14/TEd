@@ -14,8 +14,22 @@
 #include <iostream>
 
 #define WIDTH 1920
-#define HEIGHT 1080
+#define HEIGHT 1044
 #define TITLE "TEd"
+
+glm::vec3 screenToWorld(float xpos,float ypos,const glm::mat4& view,const glm::mat4& projection){
+  [[maybe_unusable]]glm::vec4 screenPos = glm::vec4(xpos,ypos,0.0f,1.0f);
+
+  float ndcX = (2.0f * xpos)/WIDTH - 1.0f;
+  float ndcY = 1.0f - (2.0f * ypos)/HEIGHT;
+  glm::vec4 clipSpacePos = glm::vec4(ndcX,ndcY,0.0f,1.0f);
+
+  glm::mat4 invVP = glm::inverse(projection * view);
+  glm::vec4 worldPos = invVP * clipSpacePos;
+  worldPos /= worldPos.w;
+
+  return glm::vec3(worldPos);
+}
 
 void framebuffer_size_callback(GLFWwindow *window,int width,int height){
   glViewport(0,0,width,height);
@@ -158,8 +172,8 @@ int main(void){
     glClear(GL_COLOR_BUFFER_BIT);
     
     glfwGetCursorPos(window,&xpos,&ypos);
-    glm::vec3 cPos = {(float)xpos,(float)HEIGHT-(float)ypos,0.0f};
-    std::cout<<"X: "<<xpos<<"Y: "<<ypos<<std::endl; 
+    //glm::vec3 cPos = {(float)xpos,(float)HEIGHT-(float)ypos,0.0f};
+    //std::cout<<"X: "<<xpos<<"Y: "<<ypos<<std::endl; 
     tex.assignTextureUnit(0);
     
     glm::mat4 model = glm::mat4(1.0f);
@@ -168,6 +182,8 @@ int main(void){
     //glm::mat4 projection = glm::ortho(0.0f,1920.0f,0.0f,1080.0f);
     glm::mat4 view = cam.getViewMatrix();
     glm::mat4 projection = cam.getProjectionMatrix();
+    
+    glm::vec3 cPos = screenToWorld(xpos,ypos,view,projection);
     shader.use();
     shader.setValue("model",model);
     shader.setValue("view",view);

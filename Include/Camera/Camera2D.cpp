@@ -4,7 +4,7 @@ Camera2D::Camera2D(GLFWwindow *window,float camSpeed){
   this->m_window = window;
   this->m_cameraSpeed = camSpeed;
   glfwGetWindowSize(m_window,&m_screenWidth,&m_screenHeight);
-
+  std::cout<<"CAMERA INIT! WIDTH: "<<m_screenWidth<<" HEIGHT: "<<m_screenHeight<<std::endl;
   this->m_cameraPosition = glm::vec3(m_screenWidth/2.0f,m_screenHeight/2.0f,0.0f);
 }
 
