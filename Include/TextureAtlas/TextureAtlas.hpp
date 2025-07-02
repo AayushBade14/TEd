@@ -21,7 +21,7 @@ class TextureAtlas{
     glm::mat4& getViewMatrix();
     glm::mat4& getProjectionMatrix();
 
-    void renderTextureAtlas(float dt,glm::vec3& cursorPos);
+    void renderTextureAtlas(float dt,glm::vec3& cursorPos,float& uv_x,float& uv_y);
 
   private:
     GLFWwindow *m_window = nullptr;

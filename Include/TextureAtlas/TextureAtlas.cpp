@@ -61,12 +61,14 @@ void TextureAtlas::handleCollisions(glm::vec3& cursorPos){
   }
 }
 
-void TextureAtlas::renderTextureAtlas(float dt,glm::vec3& cursorPos){
+void TextureAtlas::renderTextureAtlas(float dt,glm::vec3& cursorPos,float& uv_x,float& uv_y){
   m_camera.update(dt);
   handleCollisions(cursorPos); 
-  
+  uv_y = (m_nRows-1) - m_selectedRow;
+  uv_x = m_selectedCol;
+
   glm::mat4 model = glm::mat4(1.0f);
-  model = glm::scale(model,glm::vec3(1920.0f,1080.0f,0.0f));
+  model = glm::scale(model,glm::vec3(1600.0f,832.0f,0.0f));
   glm::mat4 view = m_camera.getViewMatrix();
   glm::mat4 projection = m_camera.getProjectionMatrix();
 

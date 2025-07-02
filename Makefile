@@ -23,6 +23,7 @@ OBJS = ./main.o \
 			 ./Include/UI/Button/Button.o \
 			 ./Include/Camera/Camera2D.o \
 			 ./Include/TextureAtlas/TextureAtlas.o \
+			 ./Include/TileManager/TileManager.o \
 			 ./Include/ThirdParty/glad/glad.o
 
 #target
