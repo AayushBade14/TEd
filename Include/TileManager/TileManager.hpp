@@ -22,6 +22,13 @@ struct Tile{
   int col;
 };
 
+struct CollisionTile{
+  Rectangle r;
+  bool is_walkable = false;
+  int row;
+  int col;
+};
+
 class TileManager{
   public:
     TileManager(GLFWwindow *window,const std::string& texAtlasPath,int nRows,int nCols,float tW,float tH,float nxf,float nyf);
@@ -38,6 +45,7 @@ class TileManager{
     Camera2D m_camera;
     
     std::vector<std::vector<Tile>> m_grid;
+    std::vector<std::vector<CollisionTile>> m_collision_grid;
 
     VBO m_vbo;
     VAO m_vao;
@@ -45,6 +53,7 @@ class TileManager{
     Texture m_atlasTexture;
     Texture m_gridTexture;
     Shader m_tileShader;
+    Shader m_ctileShader;
 
     int m_nRows;
     int m_nCols;
@@ -55,6 +64,7 @@ class TileManager{
     float nyf;
     
     void handleCollisions(float uv_x,float uv_y,glm::vec3& cursorPos);
-
+    bool is_collision_layer = false;
+    void handleInputs();
 };
 
