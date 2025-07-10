@@ -13,6 +13,7 @@
 #include "./Include/TextureAtlas/TextureAtlas.hpp"
 #include "./Include/TileManager/TileManager.hpp"
 #include <iostream>
+#include <utility>
 
 #define WIDTH 1920
 #define HEIGHT 1044
@@ -64,6 +65,8 @@ void processInput(GLFWwindow *window){
   }
 
 }
+
+std::vector<std::pair<int,int>> animUV;
 
 int main(void){
 
@@ -118,9 +121,11 @@ int main(void){
 
     if(is_atlas)
       atlas.renderTextureAtlas(dt,cPos,uv_x,uv_y);
-    else
-      tm.renderTiles(dt,uv_x,uv_y,gPos);
-    std::cout<<"UVX: "<<uv_x<<" UVY: "<<uv_y<<std::endl; 
+    else{
+      animUV = atlas.getAnimSelections();
+      tm.renderTiles(dt,uv_x,uv_y,gPos,animUV);
+    }
+    //std::cout<<"UVX: "<<uv_x<<" UVY: "<<uv_y<<std::endl; 
     glfwPollEvents();
     glfwSwapBuffers(window);
   }

@@ -13,6 +13,12 @@
 #include "../Camera/Camera2D.hpp"
 #include "../Collision/Collision.hpp"
 
+#include <utility>
+struct animUV{
+  float x;
+  float y;
+};
+
 struct Tile{
   Rectangle r;
   bool is_clicked = false;
@@ -20,6 +26,9 @@ struct Tile{
   float uv_y;
   int row;
   int col;
+  unsigned int animIndex = 0;
+  bool is_animated = false;
+  std::vector<animUV> uv;
 };
 
 struct CollisionTile{
@@ -37,7 +46,7 @@ class TileManager{
     glm::mat4& getViewMatrix();
     glm::mat4& getProjectionMatrix();
 
-    void renderTiles(float dt,float uv_x,float uv_y,glm::vec3& cursorPos);
+    void renderTiles(float dt,float uv_x,float uv_y,glm::vec3& cursorPos,std::vector<std::pair<int,int>>& animTiles);
 
 
   private:
@@ -63,7 +72,7 @@ class TileManager{
     float nxf;
     float nyf;
     
-    void handleCollisions(float uv_x,float uv_y,glm::vec3& cursorPos);
+    void handleCollisions(float uv_x,float uv_y,glm::vec3& cursorPos,std::vector<std::pair<int,int>>& animTiles);
     bool is_collision_layer = false;
     void handleInputs();
 };

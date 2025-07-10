@@ -79,9 +79,9 @@ m_ctileShader("./Include/TileManager/Shaders/tileVert.glsl","./Include/TileManag
   }
 }
 
-void TileManager::renderTiles(float dt,float uv_x,float uv_y,glm::vec3& cursorPos){
+void TileManager::renderTiles(float dt,float uv_x,float uv_y,glm::vec3& cursorPos,std::vector<std::pair<int,int>>& animTiles){
   m_camera.update(dt);
-  handleCollisions(uv_x,uv_y,cursorPos);
+  handleCollisions(uv_x,uv_y,cursorPos,animTiles);
   handleInputs(); 
   if(is_collision_layer){
     glEnable(GL_BLEND);
@@ -102,22 +102,52 @@ void TileManager::renderTiles(float dt,float uv_x,float uv_y,glm::vec3& cursorPo
   for(int y = 0;y < m_nRows;y++){
     for(int x = 0;x < m_nCols;x++){
       
-      model = glm::mat4(1.0f);
-      model = glm::translate(model,m_grid[y][x].r.origin);
-      model = glm::scale(model,m_grid[y][x].r.size);
+      if(!m_grid[y][x].is_animated){
+        model = glm::mat4(1.0f);
+        model = glm::translate(model,m_grid[y][x].r.origin);
+        model = glm::scale(model,m_grid[y][x].r.size);
       
-      m_tileShader.setValue("model",model);
-      m_tileShader.setValue("view",view);
-      m_tileShader.setValue("projection",projection);
-      m_tileShader.setValue("is_clicked",m_grid[y][x].is_clicked);
-      m_tileShader.setValue("uv_x",m_grid[y][x].uv_x);
-      m_tileShader.setValue("uv_y",m_grid[y][x].uv_y);
-      m_tileShader.setValue("nxf",nxf);
-      m_tileShader.setValue("nyf",nyf);
+        m_tileShader.setValue("model",model);
+        m_tileShader.setValue("view",view);
+        m_tileShader.setValue("projection",projection);
+        m_tileShader.setValue("is_clicked",m_grid[y][x].is_clicked);
+        m_tileShader.setValue("uv_x",m_grid[y][x].uv_x);
+        m_tileShader.setValue("uv_y",m_grid[y][x].uv_y);
+        m_tileShader.setValue("nxf",nxf);
+        m_tileShader.setValue("nyf",nyf);
 
-      m_vao.bind();
-      glDrawArrays(GL_TRIANGLES,0,6);
-      m_vao.unbind();
+        m_vao.bind();
+        glDrawArrays(GL_TRIANGLES,0,6);
+        m_vao.unbind();
+      }
+      else{
+        static float animTime = 0.0f;
+        static float animThresh = 0.01f;
+        unsigned int ind = m_grid[y][x].animIndex;
+        unsigned int maxind = m_grid[y][x].uv.size();
+        animTime += dt;
+        if(animTime >= animThresh){
+          m_grid[y][x].animIndex += 1;
+          animTime = 0.0f;
+        }        
+        model = glm::mat4(1.0f);
+        model = glm::translate(model,m_grid[y][x].r.origin);
+        model = glm::scale(model,m_grid[y][x].r.size);
+      
+        m_tileShader.setValue("model",model);
+        m_tileShader.setValue("view",view);
+        m_tileShader.setValue("projection",projection);
+        m_tileShader.setValue("is_clicked",m_grid[y][x].is_clicked);
+        m_tileShader.setValue("uv_x",m_grid[y][x].uv[(ind)%maxind].x);
+        m_tileShader.setValue("uv_y",m_grid[y][x].uv[ind%maxind].y);
+        m_tileShader.setValue("nxf",nxf);
+        m_tileShader.setValue("nyf",nyf);
+
+        m_vao.bind();
+        glDrawArrays(GL_TRIANGLES,0,6);
+        m_vao.unbind();
+
+      }
 
     }
   }
@@ -148,7 +178,7 @@ void TileManager::renderTiles(float dt,float uv_x,float uv_y,glm::vec3& cursorPo
   }
 }
 
-void TileManager::handleCollisions(float uv_x,float uv_y,glm::vec3& cursorPos){
+void TileManager::handleCollisions(float uv_x,float uv_y,glm::vec3& cursorPos,std::vector<std::pair<int,int>> &animTiles){
   
   if(!is_collision_layer){
     if(glfwGetMouseButton(m_window,GLFW_MOUSE_BUTTON_LEFT)==GLFW_PRESS){
@@ -156,9 +186,29 @@ void TileManager::handleCollisions(float uv_x,float uv_y,glm::vec3& cursorPos){
       for(int y = 0;y < m_nRows;y++){
         for(int x = 0;x < m_nCols;x++){
           if(point_rect_collide(clickPos,m_grid[y][x].r)){
+            if(m_grid[y][x].is_animated)
+              m_grid[y][x].is_animated = false;
             m_grid[y][x].is_clicked = true;
             m_grid[y][x].uv_x = uv_x;
             m_grid[y][x].uv_y = uv_y;
+          }
+        }
+      }
+    }
+    if(glfwGetMouseButton(m_window,GLFW_MOUSE_BUTTON_RIGHT)==GLFW_PRESS){
+      glm::vec3 anim_cilckPos = cursorPos;
+      for(int y = 0; y < m_nRows; y++){
+        for(int x = 0; x < m_nCols; x++){
+          if(point_rect_collide(anim_cilckPos,m_grid[y][x].r)){
+            m_grid[y][x].is_animated = true;
+            m_grid[y][x].is_clicked = true;
+            for(unsigned int i = 0; i < animTiles.size(); i++ ){
+              animUV tmp;
+              tmp.y = 12 - animTiles[i].first;
+              tmp.x = animTiles[i].second;
+              std::cout<<"TMP: Y->"<<12 - tmp.y<<" X->"<<tmp.x<<std::endl;
+              m_grid[y][x].uv.push_back(tmp);
+            } 
           }
         }
       }
